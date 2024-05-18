@@ -18,10 +18,6 @@ class MainActivity : AppCompatActivity() {
             fab.setOnClickListener {
                 NoteFragment().show(supportFragmentManager,NoteFragment().tag)
             }
-
-
         }
-
     }
-
 }
