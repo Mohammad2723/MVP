@@ -55,6 +55,11 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 
     //other libraries
+
+    //rxJava
+    implementation("io.reactivex.rxjava3:rxandroid:3.0.2")
+    implementation("io.reactivex.rxjava3:rxjava:3.1.8")
+
     //hilt
     implementation("com.google.dagger:hilt-android:2.49")
     ksp("com.google.dagger:hilt-compiler:2.49")

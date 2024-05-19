@@ -9,9 +9,9 @@ import com.github.ebrahimi16153.util.Constant
 data class NoteEntity(
     @PrimaryKey(autoGenerate = true)
     val id:Int = 0,
-    val title:String = "",
-    val description:String = "",
-    val category: String = "",
-    val priority:String = ""
+    var title:String = "",
+    var description:String = "",
+    var category: String = "",
+    var priority:String = ""
 
 )

@@ -30,6 +30,6 @@ class AppModule {
 
     @Singleton
     @Provides
-    fun provideNoteEntity() = NoteEntity()
+    fun provideNoteEntity():NoteEntity = NoteEntity()
 
 }
