@@ -1,15 +1,19 @@
 package com.github.ebrahimi16153.ui.add
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import com.github.ebrahimi16153.R
 import com.github.ebrahimi16153.data.model.NoteEntity
 import com.github.ebrahimi16153.data.repository.add.AddNoteRepository
 import com.github.ebrahimi16153.databinding.FragmentNoteBinding
+import com.github.ebrahimi16153.util.Constant
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -76,6 +80,17 @@ class NoteFragment : BottomSheetDialogFragment(), NoteContract.View {
 
                     //save
                     presenter.saveNote(entity)
+                } else {
+
+                    // in BottomSheetDialogFragment must use below code instead binding.root for handel Snack bar
+                    val rootView = dialog?.window?.decorView
+
+                    Snackbar.make(
+                        rootView!!,
+                        "Ops!🥲 title and description can't be empty",
+                        Snackbar.LENGTH_LONG
+                    ).show()
+
                 }
             }
         }
@@ -83,7 +98,7 @@ class NoteFragment : BottomSheetDialogFragment(), NoteContract.View {
 
     private fun categoriesSpinnerItems() {
 
-        categoryList = arrayOf("work", "home", "Education", "Health")
+        categoryList = arrayOf(Constant.HOME, Constant.WORK, Constant.EDUCATION, Constant.HEALTH)
 
         val adapter = ArrayAdapter<String>(
             requireContext(),
@@ -109,7 +124,7 @@ class NoteFragment : BottomSheetDialogFragment(), NoteContract.View {
     }
 
     private fun prioritySpinnerItems() {
-        priorityList = arrayOf("high", "medium", "low")
+        priorityList = arrayOf(Constant.LOW, Constant.MEDIUM, Constant.HIGH)
 
         val adapter = ArrayAdapter<String>(
             requireContext(),

@@ -25,6 +25,9 @@ interface NoteDao {
     @Delete
     fun delete(note:NoteEntity):Completable
 
+    @Query("SELECT * FROM ${Constant.NOTE_TABLE}")
+    fun getAllNote():Observable<List<NoteEntity>>
+
     @Query("DELETE FROM ${Constant.NOTE_TABLE}")
     fun deleteAll():Completable
 
