@@ -29,7 +29,11 @@ class NoteFragment : BottomSheetDialogFragment(), NoteContract.View {
     lateinit var repository: AddNoteRepository
 
     //presenter must be lazy or else it will crash
-    private val presenter by lazy { NotePresenter(repository, this) }
+    // private val presenter by lazy { NotePresenter(repository, this) }
+
+    @Inject
+    lateinit var presenter: NotePresenter
+
 
     //entity
     @Inject

@@ -29,7 +29,8 @@ class MainActivity : AppCompatActivity(), MainContract.View {
     lateinit var repository: MainRepository
 
     //presenter
-    private val presenter by lazy { MainPresenter(repository, this) }
+    @Inject lateinit var  presenter: MainPresenter
+//    private val presenter by lazy { MainPresenter(repository, this) }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
