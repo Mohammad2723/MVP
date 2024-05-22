@@ -18,5 +18,9 @@ object Constant {
     const val EDUCATION = "education"
     const val HEALTH = "health"
 
+    //popUpMenu
+    const val EDIT = "edit"
+    const val DELETE = "delete"
+
 
 }

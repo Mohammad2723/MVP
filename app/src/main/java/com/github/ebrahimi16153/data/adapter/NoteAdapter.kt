@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -12,10 +13,12 @@ import com.github.ebrahimi16153.data.model.NoteEntity
 import com.github.ebrahimi16153.databinding.ItemNotesBinding
 import com.github.ebrahimi16153.util.Constant
 import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.annotation.meta.When
 import javax.inject.Inject
 
-class NoteAdapter @Inject constructor(@ApplicationContext private val context: Context): RecyclerView.Adapter<NoteAdapter.ViewHolder>() {
+class NoteAdapter @Inject constructor(): RecyclerView.Adapter<NoteAdapter.ViewHolder>() {
 
+    private lateinit var context: Context
     private lateinit var binding: ItemNotesBinding
     private var movieList: List<NoteEntity> = emptyList()
 
@@ -24,6 +27,7 @@ class NoteAdapter @Inject constructor(@ApplicationContext private val context: C
         viewType: Int
     ): ViewHolder {
         binding = ItemNotesBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        context = parent.context
         return ViewHolder()
     }
 
@@ -37,7 +41,6 @@ class NoteAdapter @Inject constructor(@ApplicationContext private val context: C
 
     inner class ViewHolder : RecyclerView.ViewHolder(binding.root) {
 
-        @SuppressLint("ResourceAsColor")
         fun bindViews(item: NoteEntity) {
             binding.titleTxt.text = item.title
             binding.descTxt.text = item.description
@@ -55,13 +58,40 @@ class NoteAdapter @Inject constructor(@ApplicationContext private val context: C
                 Constant.LOW -> binding.priorityColor.setBackgroundColor(ContextCompat.getColor(context,R.color.aqua))
             }
 
-            binding.root.setOnClickListener {
+            // popUp menu (Context Menu)
+            binding.menuImg.setOnClickListener {menuItem ->
+                val popupMenu = PopupMenu(context,menuItem)
+                popupMenu.menuInflater.inflate(R.menu.popup_menu,popupMenu.menu)
+                popupMenu.show()
 
-                onItemClickListener?.let {
-                    it(item)
+                //click
+                popupMenu.setOnMenuItemClickListener { menuItem ->
+
+                    when(menuItem.itemId){
+                        R.id.popUp_delete -> {
+
+                            onItemClickListener?.let {
+                                it(item,Constant.DELETE)
+                            }
+                        }
+                        R.id.popUp_edit -> {
+                            onItemClickListener?.let {
+                                it(item,Constant.EDIT)
+                            }
+                        }
+                    }
+                    return@setOnMenuItemClickListener true
                 }
-
             }
+
+            //onItemClickListener
+            binding.root.setOnClickListener {
+                onItemClickListener?.let {
+                    it(item,Constant.EDIT)
+                }
+            }
+
+
         }
 
     }
@@ -101,9 +131,9 @@ class NoteAdapter @Inject constructor(@ApplicationContext private val context: C
 
 
     // onClickListener
-    private var onItemClickListener:((NoteEntity) -> Unit)? = null
+    private var onItemClickListener:((NoteEntity , String) -> Unit)? = null
 
-    fun seOnItemClickListener(listener:(NoteEntity) -> Unit){
+    fun seOnItemClickListener(listener:(NoteEntity ,String) -> Unit){
         onItemClickListener = listener
     }
 

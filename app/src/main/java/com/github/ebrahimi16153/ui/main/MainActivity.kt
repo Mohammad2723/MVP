@@ -1,6 +1,7 @@
 package com.github.ebrahimi16153.ui.main
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -10,6 +11,7 @@ import com.github.ebrahimi16153.data.model.NoteEntity
 import com.github.ebrahimi16153.data.repository.home.MainRepository
 import com.github.ebrahimi16153.databinding.ActivityMainBinding
 import com.github.ebrahimi16153.ui.add.NoteFragment
+import com.github.ebrahimi16153.util.Constant
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -60,6 +62,22 @@ class MainActivity : AppCompatActivity(), MainContract.View {
             adapter = noteAdapter
             layoutManager = StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL)
             noteAdapter.setData(data = notes)
+
+            // onPopUpMenuItemClick
+            noteAdapter.seOnItemClickListener { noteEntity, state ->
+
+                when(state){
+                    Constant.DELETE -> {
+
+                        Toast.makeText(this@MainActivity, "Delete", Toast.LENGTH_SHORT).show()
+                    }
+                    Constant.EDIT ->{
+
+                        Toast.makeText(this@MainActivity, "Edit", Toast.LENGTH_SHORT).show()
+
+                    }
+                }
+            }
         }
     }
 
@@ -69,17 +87,13 @@ class MainActivity : AppCompatActivity(), MainContract.View {
 
     override fun showEmptyContent() {
         binding.apply {
-
             noteList.isVisible = false
             emptyLay.isVisible = true
-
-
         }
     }
 
     override fun onStop() {
         super.onStop()
         presenter.onStop()
-
     }
 }
