@@ -8,19 +8,23 @@ object Constant {
     const val NOTE_DATABASE = "note_database"
 
     // priority
-    const val HIGH = "high"
-    const val MEDIUM = "medium"
-    const val LOW = "low"
+    const val HIGH = "High"
+    const val MEDIUM = "Medium"
+    const val LOW = "Low"
 
     //category
-    const val WORK = "work"
-    const val HOME = "home"
-    const val EDUCATION = "education"
-    const val HEALTH = "health"
+    const val WORK = "Work"
+    const val HOME = "Home"
+    const val EDUCATION = "Education"
+    const val HEALTH = "Health"
 
     //popUpMenu
     const val EDIT = "edit"
     const val DELETE = "delete"
+
+    //bundle
+    const val BUNDLE_ID = "bundle_id"
+    const val FRAGMENT_TAG = "fragment_tag"
 
 
 }

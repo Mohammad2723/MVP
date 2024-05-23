@@ -7,11 +7,15 @@ interface NoteContract {
 
     interface View {
         fun closePage()
+        fun showNoteDetail(note: NoteEntity)
+
+        fun showErrorToFindNoteByID()
     }
 
     interface Presenter : BasePresenter {
 
         fun saveNote(note: NoteEntity)
+        fun getNoteById(id:Int)
 
     }
 }

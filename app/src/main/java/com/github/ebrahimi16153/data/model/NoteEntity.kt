@@ -8,7 +8,7 @@ import com.github.ebrahimi16153.util.Constant
 @Entity(tableName = Constant.NOTE_TABLE)
 data class NoteEntity(
     @PrimaryKey(autoGenerate = true)
-    val id:Int = 0,
+    var id:Int = 0,
     var title:String = "",
     var description:String = "",
     var category: String = "",

@@ -7,4 +7,5 @@ import javax.inject.Inject
 class AddNoteRepository @Inject constructor(private val dao: NoteDao) {
 
     fun addNote(note: NoteEntity) = dao.insert(note)
+    fun getNoteById(id:Int) = dao.getNoteById(id)
 }

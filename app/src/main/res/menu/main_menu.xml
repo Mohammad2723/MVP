@@ -8,13 +8,14 @@
         android:icon="@drawable/ic_round_search_24"
         android:title="@string/search"
         app:actionViewClass="androidx.appcompat.widget.SearchView"
-        app:iconTint="@color/black"
+        app:iconTint="@color/whiteSmoke"
         app:actionProviderClass="androidx.appcompat.widget.ShareActionProvider"
         app:showAsAction="ifRoom|collapseActionView" />
 
     <item
         android:id="@+id/main_menu_Filter"
         android:icon="@drawable/ic_filter"
+        app:iconTint="@color/whiteSmoke"
         android:title="@string/filter"
         app:showAsAction="ifRoom" />
 

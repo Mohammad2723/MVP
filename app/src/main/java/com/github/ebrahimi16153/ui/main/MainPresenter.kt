@@ -1,5 +1,6 @@
 package com.github.ebrahimi16153.ui.main
 
+import com.github.ebrahimi16153.data.model.NoteEntity
 import com.github.ebrahimi16153.data.repository.home.MainRepository
 import com.github.ebrahimi16153.util.base.BasePresenterImpl
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -26,5 +27,14 @@ class MainPresenter @Inject constructor(
 
                 view.showError(it.message.toString())
             })
+    }
+
+    override fun deleteNote(noteEntity: NoteEntity) {
+        disposable = repository.deleteNote(noteEntity = noteEntity)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
+            view.deleteMassage()
+        }
     }
 }

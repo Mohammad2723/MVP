@@ -1,6 +1,5 @@
 package com.github.ebrahimi16153.data.adapter
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -12,8 +11,6 @@ import com.github.ebrahimi16153.R
 import com.github.ebrahimi16153.data.model.NoteEntity
 import com.github.ebrahimi16153.databinding.ItemNotesBinding
 import com.github.ebrahimi16153.util.Constant
-import dagger.hilt.android.qualifiers.ApplicationContext
-import javax.annotation.meta.When
 import javax.inject.Inject
 
 class NoteAdapter @Inject constructor(): RecyclerView.Adapter<NoteAdapter.ViewHolder>() {

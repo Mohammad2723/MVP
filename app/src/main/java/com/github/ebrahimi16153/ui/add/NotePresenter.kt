@@ -7,15 +7,27 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
 
-class NotePresenter @Inject constructor(private val addNoteRepository: AddNoteRepository, private val view: NoteContract.View) :
+class NotePresenter @Inject constructor(
+    private val addNoteRepository: AddNoteRepository,
+    private val view: NoteContract.View
+) :
     NoteContract.Presenter, BasePresenterImpl() {
     override fun saveNote(note: NoteEntity) {
 
         disposable = addNoteRepository.addNote(note = note).subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread()).subscribe {
-            view.closePage()
-        }
+                view.closePage()
+            }
 
 
+    }
+
+    override fun getNoteById(id: Int) {
+        disposable = addNoteRepository.getNoteById(id = id).subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread()).subscribe({
+            view.showNoteDetail(note = it)
+        }, {
+           view.showErrorToFindNoteByID()
+        })
     }
 }

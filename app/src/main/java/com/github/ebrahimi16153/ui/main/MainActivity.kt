@@ -44,12 +44,11 @@ class MainActivity : AppCompatActivity(), MainContract.View {
 
             //fab click
             fab.setOnClickListener {
-                NoteFragment().show(supportFragmentManager, NoteFragment().tag)
+                NoteFragment().show(supportFragmentManager, Constant.FRAGMENT_TAG)
             }
 
             // show list or error
             presenter.getNotes()
-
 
         }
     }
@@ -63,17 +62,23 @@ class MainActivity : AppCompatActivity(), MainContract.View {
             layoutManager = StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL)
             noteAdapter.setData(data = notes)
 
-            // onPopUpMenuItemClick
+            // setOnItemClickListener and onMenuItemClick
             noteAdapter.seOnItemClickListener { noteEntity, state ->
 
-                when(state){
-                    Constant.DELETE -> {
 
-                        Toast.makeText(this@MainActivity, "Delete", Toast.LENGTH_SHORT).show()
+                when(state){
+                    //delete
+                    Constant.DELETE -> {
+                        presenter.deleteNote(noteEntity = noteEntity)
                     }
+                    //edite
                     Constant.EDIT ->{
 
-                        Toast.makeText(this@MainActivity, "Edit", Toast.LENGTH_SHORT).show()
+                        val noteFragment = NoteFragment()
+                        val bundle = Bundle()
+                        bundle.putInt(Constant.BUNDLE_ID,noteEntity.id)
+                        noteFragment.arguments = bundle
+                        noteFragment.show(supportFragmentManager,Constant.FRAGMENT_TAG)
 
                     }
                 }
@@ -90,6 +95,10 @@ class MainActivity : AppCompatActivity(), MainContract.View {
             noteList.isVisible = false
             emptyLay.isVisible = true
         }
+    }
+
+    override fun deleteMassage() {
+        Snackbar.make(binding.root,"Note deleted :|",Snackbar.LENGTH_SHORT).show()
     }
 
     override fun onStop() {

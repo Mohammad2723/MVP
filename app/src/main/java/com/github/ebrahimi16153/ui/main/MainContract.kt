@@ -8,10 +8,12 @@ interface MainContract {
     interface View{
         fun showNotes(notes:List<NoteEntity>)
         fun showError(message:String)
-
         fun showEmptyContent()
+
+        fun deleteMassage()
     }
     interface Presenter:BasePresenter{
         fun getNotes()
+        fun deleteNote(noteEntity: NoteEntity)
     }
 }

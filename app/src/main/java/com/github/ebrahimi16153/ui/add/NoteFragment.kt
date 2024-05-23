@@ -1,12 +1,14 @@
 package com.github.ebrahimi16153.ui.add
 
+import android.R.attr.defaultValue
+import android.R.attr.key
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import com.github.ebrahimi16153.R
 import com.github.ebrahimi16153.data.model.NoteEntity
 import com.github.ebrahimi16153.data.repository.add.AddNoteRepository
@@ -60,6 +62,13 @@ class NoteFragment : BottomSheetDialogFragment(), NoteContract.View {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        var noteId = -1
+        //getNoteId from Bundle
+        val bundle = this.arguments
+        if (bundle != null) {
+             noteId = bundle.getInt(Constant.BUNDLE_ID, defaultValue)
+        }
+
         // initViews
         binding.apply {
 
@@ -67,21 +76,27 @@ class NoteFragment : BottomSheetDialogFragment(), NoteContract.View {
             closeImg.setOnClickListener {
                 this@NoteFragment.dismiss()
             }
-
+            if (noteId != -1){
+                presenter.getNoteById(noteId)
+            }
             // spinners
             prioritySpinnerItems()
             categoriesSpinnerItems()
+
+
 
             saveNote.setOnClickListener {
                 val title = titleEdt.text.toString()
                 val description = descEdt.text.toString()
                 if (title.isNotEmpty() && description.isNotEmpty()) {
                     //fill entity
+                    if (noteId != -1){
+                        entity.id = noteId
+                    }
                     entity.title = title
                     entity.description = description
                     entity.category = category
                     entity.priority = priority
-
                     //save
                     presenter.saveNote(entity)
                 } else {
@@ -106,7 +121,7 @@ class NoteFragment : BottomSheetDialogFragment(), NoteContract.View {
 
         val adapter = ArrayAdapter<String>(
             requireContext(),
-            android.R.layout.simple_spinner_item,
+            R.layout.spinner_item,
             categoryList
         )
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -132,7 +147,7 @@ class NoteFragment : BottomSheetDialogFragment(), NoteContract.View {
 
         val adapter = ArrayAdapter<String>(
             requireContext(),
-            android.R.layout.simple_spinner_item,
+            R.layout.spinner_item,
             priorityList
         )
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -154,8 +169,30 @@ class NoteFragment : BottomSheetDialogFragment(), NoteContract.View {
             }
     }
 
+
+//    categoryList = arrayOf(Constant.HOME, Constant.WORK, Constant.EDUCATION, Constant.HEALTH)
+
+    override fun showNoteDetail(note: NoteEntity) {
+        binding.apply {
+            titleEdt.setText(note.title)
+            descEdt.setText(note.description)
+            category = note.category
+            priority = note.priority
+
+        }
+    }
+
+    override fun showErrorToFindNoteByID() {
+        val rootView = dialog?.window?.decorView
+
+        Snackbar.make(
+            rootView!!,
+            "can not find this Note",
+            Snackbar.LENGTH_LONG
+        ).show()
+    }
+
     override fun closePage() {
         this.dismiss()
     }
-
 }
