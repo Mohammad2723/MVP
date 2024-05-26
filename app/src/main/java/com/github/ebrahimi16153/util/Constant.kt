@@ -26,5 +26,9 @@ object Constant {
     const val BUNDLE_ID = "bundle_id"
     const val FRAGMENT_TAG = "fragment_tag"
 
+    //state -> newNote or editNote
+    const val EDIT_NOTE = "edit_note"
+    const val NEW_NOTE = "new_note"
+
 
 }

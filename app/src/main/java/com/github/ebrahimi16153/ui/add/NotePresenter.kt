@@ -25,9 +25,18 @@ class NotePresenter @Inject constructor(
     override fun getNoteById(id: Int) {
         disposable = addNoteRepository.getNoteById(id = id).subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread()).subscribe({
-            view.showNoteDetail(note = it)
-        }, {
-           view.showErrorToFindNoteByID()
-        })
+                view.showNoteDetail(note = it)
+            }, {
+                view.showErrorToFindNoteByID()
+            })
     }
+
+    override fun updateNote(note: NoteEntity) {
+        disposable = addNoteRepository.update(note).subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread()).subscribe {
+            view.closePage()
+        }
+    }
+
+
 }

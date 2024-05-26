@@ -17,5 +17,7 @@ interface NoteContract {
         fun saveNote(note: NoteEntity)
         fun getNoteById(id:Int)
 
+        fun updateNote(note: NoteEntity)
+
     }
 }

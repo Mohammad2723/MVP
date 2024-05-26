@@ -1,14 +1,12 @@
 package com.github.ebrahimi16153.ui.add
 
 import android.R.attr.defaultValue
-import android.R.attr.key
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.Toast
 import com.github.ebrahimi16153.R
 import com.github.ebrahimi16153.data.model.NoteEntity
 import com.github.ebrahimi16153.data.repository.add.AddNoteRepository
@@ -49,6 +47,16 @@ class NoteFragment : BottomSheetDialogFragment(), NoteContract.View {
     private lateinit var priorityList: Array<String>
     private lateinit var priority: String
 
+    //noteEntity
+    @Inject
+    lateinit var noteEntity: NoteEntity
+
+    // noteId
+    private var noteId = 0
+
+    //state
+    lateinit var state: String
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -62,12 +70,11 @@ class NoteFragment : BottomSheetDialogFragment(), NoteContract.View {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        var noteId = -1
         //getNoteId from Bundle
-        val bundle = this.arguments
-        if (bundle != null) {
-             noteId = bundle.getInt(Constant.BUNDLE_ID, defaultValue)
-        }
+        val noteId = arguments?.getInt(Constant.BUNDLE_ID) ?: 0
+
+        //state
+        state = if (noteId > 0) Constant.EDIT_NOTE else Constant.NEW_NOTE
 
         // initViews
         binding.apply {
@@ -76,7 +83,9 @@ class NoteFragment : BottomSheetDialogFragment(), NoteContract.View {
             closeImg.setOnClickListener {
                 this@NoteFragment.dismiss()
             }
-            if (noteId != -1){
+
+            // show detail
+            if (state == Constant.EDIT_NOTE) {
                 presenter.getNoteById(noteId)
             }
             // spinners
@@ -88,29 +97,35 @@ class NoteFragment : BottomSheetDialogFragment(), NoteContract.View {
             saveNote.setOnClickListener {
                 val title = titleEdt.text.toString()
                 val description = descEdt.text.toString()
-                if (title.isNotEmpty() && description.isNotEmpty()) {
-                    //fill entity
-                    if (noteId != -1){
-                        entity.id = noteId
-                    }
-                    entity.title = title
-                    entity.description = description
-                    entity.category = category
-                    entity.priority = priority
-                    //save
-                    presenter.saveNote(entity)
-                } else {
-
-                    // in BottomSheetDialogFragment must use below code instead binding.root for handel Snack bar
-                    val rootView = dialog?.window?.decorView
-
-                    Snackbar.make(
-                        rootView!!,
-                        "Ops!🥲 title and description can't be empty",
-                        Snackbar.LENGTH_LONG
-                    ).show()
-
+                val rootView = dialog?.window?.decorView
+                if (title.isEmpty() && description.isEmpty()){
+                    Snackbar.make(rootView!!,"title and description can't be empty",Snackbar.LENGTH_SHORT).show()
+                    return@setOnClickListener
                 }
+
+                //fill entity
+                noteEntity.id = noteId
+                noteEntity.title = title
+                noteEntity.description = description
+                noteEntity.priority = priority
+                noteEntity.category = category
+
+                when(state){
+                    //save
+                    Constant.NEW_NOTE -> {
+
+                        presenter.saveNote(noteEntity)
+
+                    }
+                    // update
+                    Constant.EDIT_NOTE -> {
+
+                        presenter.updateNote(noteEntity)
+
+                    }
+                }
+
+
             }
         }
     }
@@ -152,7 +167,6 @@ class NoteFragment : BottomSheetDialogFragment(), NoteContract.View {
         )
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.prioritySpinner.adapter = adapter
-
         binding.prioritySpinner.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
@@ -176,12 +190,10 @@ class NoteFragment : BottomSheetDialogFragment(), NoteContract.View {
         binding.apply {
             titleEdt.setText(note.title)
             descEdt.setText(note.description)
-            category = note.category
-            priority = note.priority
-
+            categoriesSpinner.setSelection(findIndex(categoryList,note.category))
+            prioritySpinner.setSelection(findIndex(priorityList,note.priority))
         }
     }
-
     override fun showErrorToFindNoteByID() {
         val rootView = dialog?.window?.decorView
 
@@ -190,6 +202,11 @@ class NoteFragment : BottomSheetDialogFragment(), NoteContract.View {
             "can not find this Note",
             Snackbar.LENGTH_LONG
         ).show()
+    }
+
+    private fun findIndex(list:Array<String>, value:String): Int {
+        val index = list.indexOf(value)
+        return index
     }
 
     override fun closePage() {
