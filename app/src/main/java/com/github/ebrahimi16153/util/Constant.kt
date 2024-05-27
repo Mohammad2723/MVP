@@ -8,6 +8,7 @@ object Constant {
     const val NOTE_DATABASE = "note_database"
 
     // priority
+    const val ALL = "All"
     const val HIGH = "High"
     const val MEDIUM = "Medium"
     const val LOW = "Low"

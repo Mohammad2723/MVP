@@ -8,5 +8,6 @@ class MainRepository @Inject constructor(private val dao: NoteDao) {
 
     fun getAllNotes() = dao.getAllNote()
     fun deleteNote(noteEntity: NoteEntity) = dao.delete(note = noteEntity)
+    fun filterNote(priority:String) = dao.filterByPriority(priority)
 
 }

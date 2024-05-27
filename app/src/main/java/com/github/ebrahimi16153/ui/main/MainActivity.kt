@@ -1,11 +1,14 @@
 package com.github.ebrahimi16153.ui.main
 
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.github.ebrahimi16153.R
 import com.github.ebrahimi16153.data.adapter.NoteAdapter
 import com.github.ebrahimi16153.data.model.NoteEntity
 import com.github.ebrahimi16153.data.repository.home.MainRepository
@@ -34,6 +37,10 @@ class MainActivity : AppCompatActivity(), MainContract.View {
     @Inject lateinit var  presenter: MainPresenter
 //    private val presenter by lazy { MainPresenter(repository, this) }
 
+    //selected priority
+    private var selectedItem = 0
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,15 +54,30 @@ class MainActivity : AppCompatActivity(), MainContract.View {
                 NoteFragment().show(supportFragmentManager, Constant.FRAGMENT_TAG)
             }
 
+            //menu click
+            notesToolbar.setOnMenuItemClickListener{
+                when(it.itemId){
+                    R.id.main_menu_Filter ->{
+                        showAlertForPriority()
+                        return@setOnMenuItemClickListener true
+                    }
+
+                    else -> {return@setOnMenuItemClickListener  false}
+                }
+            }
+
+
             // show list or error
             presenter.getNotes()
+
+
 
         }
     }
 
     override fun showNotes(notes: List<NoteEntity>) {
-        binding.noteList.isVisible = true
-        binding.emptyLay.isVisible = false
+        binding.noteList.visibility = View.VISIBLE
+        binding.emptyLay.visibility = View.GONE
 
         binding.noteList.apply {
             adapter = noteAdapter
@@ -99,6 +121,28 @@ class MainActivity : AppCompatActivity(), MainContract.View {
 
     override fun deleteMassage() {
         Snackbar.make(binding.root,"Note deleted :|",Snackbar.LENGTH_SHORT).show()
+    }
+
+
+    private fun showAlertForPriority(){
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Filter by :")
+        val listOFPriority = arrayOf(Constant.ALL,Constant.HIGH,Constant.MEDIUM,Constant.LOW)
+        builder.setSingleChoiceItems(listOFPriority,selectedItem){ dialog , item ->
+
+            when(item){
+                0 -> {presenter.getNotes()}
+               in 1..3 -> {presenter.filterNote(listOFPriority[item])}
+            }
+            dialog.dismiss()
+            selectedItem = item
+
+        }
+
+        val dialog :AlertDialog = builder.create()
+        dialog.show()
+
+
     }
 
     override fun onStop() {

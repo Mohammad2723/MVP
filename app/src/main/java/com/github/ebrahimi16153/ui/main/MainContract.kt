@@ -11,9 +11,12 @@ interface MainContract {
         fun showEmptyContent()
 
         fun deleteMassage()
+
     }
     interface Presenter:BasePresenter{
         fun getNotes()
         fun deleteNote(noteEntity: NoteEntity)
+
+        fun filterNote(priority:String)
     }
 }

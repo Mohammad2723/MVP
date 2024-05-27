@@ -34,7 +34,18 @@ class MainPresenter @Inject constructor(
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe {
-            view.deleteMassage()
+                view.deleteMassage()
+            }
+    }
+
+    override fun filterNote(priority: String) {
+        disposable = repository.filterNote(priority = priority).observeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread()).subscribe {
+            if (it.isEmpty()) {
+                view.showEmptyContent()
+            } else {
+                view.showNotes(it)
+            }
         }
     }
 }

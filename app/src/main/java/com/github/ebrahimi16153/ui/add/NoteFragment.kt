@@ -55,7 +55,7 @@ class NoteFragment : BottomSheetDialogFragment(), NoteContract.View {
     private var noteId = 0
 
     //state
-    lateinit var state: String
+    private lateinit var state: String
 
 
     override fun onCreateView(
@@ -98,7 +98,7 @@ class NoteFragment : BottomSheetDialogFragment(), NoteContract.View {
                 val title = titleEdt.text.toString()
                 val description = descEdt.text.toString()
                 val rootView = dialog?.window?.decorView
-                if (title.isEmpty() && description.isEmpty()){
+                if (title.isEmpty() || description.isEmpty()){
                     Snackbar.make(rootView!!,"title and description can't be empty",Snackbar.LENGTH_SHORT).show()
                     return@setOnClickListener
                 }
