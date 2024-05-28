@@ -41,6 +41,17 @@ class MainPresenter @Inject constructor(
     override fun filterNote(priority: String) {
         disposable = repository.filterNote(priority = priority).observeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread()).subscribe {
+                if (it.isEmpty()) {
+                    view.showEmptyContent()
+                } else {
+                    view.showNotes(it)
+                }
+            }
+    }
+
+    override fun search(searchQuery: String) {
+        disposable = repository.searchQuery(searchQuery).subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread()).subscribe {
             if (it.isEmpty()) {
                 view.showEmptyContent()
             } else {

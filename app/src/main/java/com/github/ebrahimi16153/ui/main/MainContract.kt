@@ -18,5 +18,8 @@ interface MainContract {
         fun deleteNote(noteEntity: NoteEntity)
 
         fun filterNote(priority:String)
+
+        //
+        fun search(searchQuery:String)
     }
 }

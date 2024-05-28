@@ -1,10 +1,12 @@
 package com.github.ebrahimi16153.ui.main
 
 import android.os.Bundle
+import android.view.Menu
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
@@ -46,6 +48,10 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // set ActionBar
+
+        setSupportActionBar(binding.notesToolbar)
 
         binding.apply {
 
@@ -143,6 +149,29 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         dialog.show()
 
 
+    }
+
+    // for handel search in topBar
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+
+        menuInflater.inflate(R.menu.main_menu,menu)
+        val search = menu.findItem(R.id.main_menu_search)
+        val searchView = search.actionView as SearchView
+        searchView.queryHint = "search..."
+        searchView.setOnQueryTextListener(object:SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String?): Boolean {
+
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String): Boolean {
+                presenter.search(newText)
+                return true
+            }
+
+        })
+
+        return super.onCreateOptionsMenu(menu)
     }
 
     override fun onStop() {
